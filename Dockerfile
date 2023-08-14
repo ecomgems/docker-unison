@@ -1,5 +1,5 @@
-ARG OCAML_VERSION=4.12.0
-ARG UNISON_VERSION=2.51.3
+ARG OCAML_VERSION=4.14.0
+ARG UNISON_VERSION=2.53.3
 
 FROM ubuntu:latest AS builder
 
@@ -23,10 +23,6 @@ RUN curl -L https://caml.inria.fr/pub/distrib/ocaml-$(echo ${OCAML_VERSION} | cu
 ARG UNISON_VERSION
 RUN curl -L https://github.com/bcpierce00/unison/archive/v$UNISON_VERSION.tar.gz | tar zxv -C /tmp \
     && cd /tmp/unison-${UNISON_VERSION} \
-    && curl https://github.com/bcpierce00/unison/commit/14b885316e0a4b41cb80fe3daef7950f88be5c8f.patch?full_index=1 -o patch.diff \
-    && git apply patch.diff \
-    && rm patch.diff \
-    && sed -i -e 's/GLIBC_SUPPORT_INOTIFY 0/GLIBC_SUPPORT_INOTIFY 1/' src/fsmonitor/linux/inotify_stubs.c \
     && make UISTYLE=text NATIVE=true STATIC=true \
     && cp src/unison src/unison-fsmonitor /usr/local/bin
 
